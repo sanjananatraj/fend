@@ -1,16 +1,42 @@
+const urlRegex = https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)
+
 function handleSubmit(event) {
     event.preventDefault()
-
-    // check what text was put into the form field
+    
     let formText = document.getElementById('name').value
-    checkForName(formText)
 
-    console.log("::: Form Submitted :::")
-    fetch('http://localhost:8080/test')
-    .then(res => res.json())
-    .then(function(res) {
-        document.getElementById('results').innerHTML = res.message
-    })
+    if(formText.match(urlRegex)) {
+        console.log("::: Form Submitted :::")    
+    
+        postData('http://localhost:5000/all', {url: formText})
+        .then(function(data) {
+            console.log(data);
+            document.getElementById('results').innerHTML += data.agreement + "<br>";
+            document.getElementById('results').innerHTML += data.confidence + "<br>";
+            document.getElementById('results').innerHTML += data.irony + "<br><br>";
+        })
+    } else {
+        alert('Invalid URL');
+    }
 }
+
+const postData = async (url = "", data = {}) => {
+    const res = await fetch(url, {
+        method: 'POST',
+        credentials: 'same-origin',
+        mode: 'cors',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    });
+    try {
+        const newData = await res.json();
+        console.log(newData)
+        return newData;
+    } catch (error) {
+        console.log('error', error);
+    }
+};
 
 export { handleSubmit }
