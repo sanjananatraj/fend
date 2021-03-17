@@ -1,26 +1,24 @@
-const urlRegex = https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)
+import "regenerator-runtime/runtime";
 
 function handleSubmit(event) {
     event.preventDefault()
     
     let formText = document.getElementById('name').value
 
-    if(formText.match(urlRegex)) {
+    if(Client.validateURL(formText)) {
         console.log("::: Form Submitted :::")    
     
         postData('http://localhost:5000/all', {url: formText})
         .then(function(data) {
             console.log(data);
-            document.getElementById('results').innerHTML += data.agreement + "<br>";
-            document.getElementById('results').innerHTML += data.confidence + "<br>";
-            document.getElementById('results').innerHTML += data.irony + "<br><br>";
+            document.getElementById('results').innerHTML += data.agreement + "<br>" + data.confidence + "<br>" + data.irony + "<br><br>";
         })
     } else {
         alert('Invalid URL');
     }
 }
 
-const postData = async (url = "", data = {}) => {
+const postData = async (url = '', data = {}) => {
     const res = await fetch(url, {
         method: 'POST',
         credentials: 'same-origin',

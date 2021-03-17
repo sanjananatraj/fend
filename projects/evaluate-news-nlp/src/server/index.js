@@ -7,6 +7,7 @@ const mockAPIResponse = require('./mockAPI.js')
 var bodyParser = require('body-parser')
 var cors = require('cors')
 const fetch = require('node-fetch');
+const regeneratorRuntime = require("regenerator-runtime");
 
 // Start up an instance of app
 const app = express()
@@ -30,7 +31,6 @@ app.post('/all', async function(req, res) {
     const apiRes = await fetch(apiURL)
     const apiData = await apiRes.json()
     res.send(apiData)
-
 })
 
 app.get('/', function (req, res) {
